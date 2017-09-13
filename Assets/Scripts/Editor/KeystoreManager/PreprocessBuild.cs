@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityModule.CommandLine;
@@ -24,7 +25,7 @@ namespace KeystoreManager {
                 return;
             }
             EnvironmentSetting.Keystore keystore = Arguments.GetBool(COMMANDLINE_ARGUMENT_DEVELOPMENT_BUILD) ? EnvironmentSetting.Instance.KeystoreDevelopment : EnvironmentSetting.Instance.KeystoreProduction;
-            PlayerSettings.Android.keystoreName = Path.GetFullPath(keystore.Path);
+            PlayerSettings.Android.keystoreName = Path.GetFullPath(keystore.Path.Replace("~", Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
             PlayerSettings.Android.keystorePass = keystore.Passphrase;
             PlayerSettings.Android.keyaliasName = keystore.AliasName;
             PlayerSettings.Android.keyaliasPass = keystore.AliasPassphrase;
