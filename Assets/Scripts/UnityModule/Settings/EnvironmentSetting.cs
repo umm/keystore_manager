@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityModule.KeystoreManager;
+#pragma warning disable 649
 
 namespace UnityModule.Settings {
 
@@ -12,51 +14,67 @@ namespace UnityModule.Settings {
         /// Keystore の情報を管理する構造体
         /// </summary>
         [Serializable]
-        public struct Keystore {
+        public struct KeystoreInformation {
 
-            public string Path;
+            [SerializeField]
+            private BuildEnvironment buildEnvironment;
 
-            public string Passphrase;
+            public BuildEnvironment BuildEnvironment {
+                get {
+                    return this.buildEnvironment;
+                }
+            }
 
-            public string AliasName;
+            [SerializeField]
+            private string path;
 
-            public string AliasPassphrase;
+            public string Path {
+                get {
+                    return this.path;
+                }
+            }
+
+            [SerializeField]
+            private string passphrase;
+
+            public string Passphrase {
+                get {
+                    return this.passphrase;
+                }
+            }
+
+            [SerializeField]
+            private string aliasName;
+
+            public string AliasName {
+                get {
+                    return this.aliasName;
+                }
+            }
+
+            [SerializeField]
+            private string aliasPassphrase;
+
+            public string AliasPassphrase {
+                get {
+                    return this.aliasPassphrase;
+                }
+            }
 
         }
 
         /// <summary>
-        /// 開発向けのキーストアの実体
+        /// キーストアのリストの実体
         /// </summary>
         [SerializeField]
-        private Keystore keystoreDevelopment;
+        private List<KeystoreInformation> keystoreList;
 
         /// <summary>
-        /// 開発向けのキーストア
+        /// キーストアのリスト
         /// </summary>
-        public Keystore KeystoreDevelopment {
+        public List<KeystoreInformation> KeystoreList {
             get {
-                return this.keystoreDevelopment;
-            }
-            set {
-                this.keystoreDevelopment = value;
-            }
-        }
-
-        /// <summary>
-        /// 本番向けのキーストアの実体
-        /// </summary>
-        [SerializeField]
-        private Keystore keystoreProduction;
-
-        /// <summary>
-        /// 本番向けのキーストア
-        /// </summary>
-        public Keystore KeystoreProduction {
-            get {
-                return this.keystoreProduction;
-            }
-            set {
-                this.keystoreProduction = value;
+                return this.keystoreList;
             }
         }
 
