@@ -64,6 +64,21 @@ namespace UnityModule.Settings {
         }
 
         /// <summary>
+        /// キーストアの設定として環境変数を使うかどうかの実体
+        /// </summary>
+        [SerializeField]
+        private bool shouldKeystoreUseEnvironmentVariable = true;
+
+        /// <summary>
+        /// キーストアの設定として環境変数を使うかどうか
+        /// </summary>
+        public bool ShouldKeystoreUseEnvironmentVariable {
+            get {
+                return this.shouldKeystoreUseEnvironmentVariable;
+            }
+        }
+
+        /// <summary>
         /// キーストアのリストの実体
         /// </summary>
         [SerializeField]
