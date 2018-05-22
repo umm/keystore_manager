@@ -2,11 +2,18 @@
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build;
+#if UNITY_2018_1_OR_NEWER
+using UnityEditor.Build.Reporting;
+#endif
 using UnityModule.Settings;
 
 namespace UnityModule.KeystoreManager {
 
+#if UNITY_2018_1_OR_NEWER
+    public class PreprocessBuild : IPreprocessBuildWithReport {
+#else
     public class PreprocessBuild : IPreprocessBuild {
+#endif
 
         private const string ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PATH             = "KEYSTORE_PATH";
 
@@ -27,10 +34,18 @@ namespace UnityModule.KeystoreManager {
             }
         }
 
+#if UNITY_2018_1_OR_NEWER
+        public void OnPreprocessBuild(BuildReport report)
+        {
+            if (report.summary.platform != BuildTarget.Android) {
+                return;
+            }
+#else
         public void OnPreprocessBuild(BuildTarget target, string path) {
             if (target != BuildTarget.Android) {
                 return;
             }
+#endif
             if (EnvironmentSetting.Instance.ShouldKeystoreUseEnvironmentVariable) {
                 PlayerSettings.Android.keystoreName = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PATH);
                 PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PASSPHRASE);
