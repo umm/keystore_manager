@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEditor.Build;
 #if UNITY_2018_1_OR_NEWER
@@ -7,59 +9,62 @@ using UnityEditor.Build.Reporting;
 #endif
 using UnityModule.Settings;
 
-namespace UnityModule.KeystoreManager {
-
+namespace UnityModule.KeystoreManager
+{
 #if UNITY_2018_1_OR_NEWER
-    public class PreprocessBuild : IPreprocessBuildWithReport {
+    [PublicAPI]
+    public class PreprocessBuild : IPreprocessBuildWithReport
+    {
 #else
-    public class PreprocessBuild : IPreprocessBuild {
+    [PublicAPI]
+    public class PreprocessBuild : IPreprocessBuild
+    {
 #endif
+        private const int PreprocessBuildCallbackOrder = 100;
 
-        private const string ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PATH             = "KEYSTORE_PATH";
+        private const string EnvironmentVariableNameKeystorePath = "KEYSTORE_PATH";
 
-        private const string ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PASSPHRASE       = "KEYSTORE_PASSPHRASE";
+        private const string EnvironmentVariableNameKeystorePassphrase = "KEYSTORE_PASSPHRASE";
 
-        private const string ENVIRONMENT_VARIABLE_NAME_KEYSTORE_ALIAS_NAME       = "KEYSTORE_ALIAS_NAME";
+        private const string EnvironmentVariableNameKeystoreAliasName = "KEYSTORE_ALIAS_NAME";
 
-        private const string ENVIRONMENT_VARIABLE_NAME_KEYSTORE_ALIAS_PASSPHRASE = "KEYSTORE_ALIAS_PASSPHRASE";
+        private const string EnvironmentVariableNameKeystoreAliasPassphrase = "KEYSTORE_ALIAS_PASSPHRASE";
 
-        /// <summary>
-        /// コマンドライン引数: 開発ビルドかどうか
-        /// </summary>
-        private const string COMMANDLINE_ARGUMENT_DEVELOPMENT_BUILD = "developmentBuild";
-
-        public int callbackOrder {
-            get {
-                return 100;
-            }
-        }
+        public int callbackOrder => PreprocessBuildCallbackOrder;
 
 #if UNITY_2018_1_OR_NEWER
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (report.summary.platform != BuildTarget.Android) {
+            if (report.summary.platform != BuildTarget.Android)
+            {
                 return;
             }
 #else
-        public void OnPreprocessBuild(BuildTarget target, string path) {
-            if (target != BuildTarget.Android) {
+        public void OnPreprocessBuild(BuildTarget target, string path)
+        {
+            if (target != BuildTarget.Android)
+            {
                 return;
             }
 #endif
-            if (EnvironmentSetting.Instance.ShouldKeystoreUseEnvironmentVariable) {
-                PlayerSettings.Android.keystoreName = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PATH);
-                PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_PASSPHRASE);
-                PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_ALIAS_NAME);
-                PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable(ENVIRONMENT_VARIABLE_NAME_KEYSTORE_ALIAS_PASSPHRASE);
-            } else {
-                EnvironmentSetting.KeystoreInformation keystoreInformation = EnvironmentSetting.Instance.KeystoreList.Find(x => x.BuildEnvironment == (EditorUserBuildSettings.development ? BuildEnvironment.Development : BuildEnvironment.Production));
+            if (KeyStoreSetting.GetOrDefault().ShouldKeystoreUseEnvironmentVariable)
+            {
+                PlayerSettings.Android.keystoreName = Environment.GetEnvironmentVariable(EnvironmentVariableNameKeystorePath);
+                PlayerSettings.Android.keystorePass = Environment.GetEnvironmentVariable(EnvironmentVariableNameKeystorePassphrase);
+                PlayerSettings.Android.keyaliasName = Environment.GetEnvironmentVariable(EnvironmentVariableNameKeystoreAliasName);
+                PlayerSettings.Android.keyaliasPass = Environment.GetEnvironmentVariable(EnvironmentVariableNameKeystoreAliasPassphrase);
+            }
+            else
+            {
+                var keystoreInformation = KeyStoreSetting
+                    .GetOrDefault()
+                    .KeystoreInformationList
+                    .FirstOrDefault(x => x.BuildEnvironment == (EditorUserBuildSettings.development ? BuildEnvironment.Development : BuildEnvironment.Production));
                 PlayerSettings.Android.keystoreName = Path.GetFullPath(keystoreInformation.Path.Replace("~", Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                 PlayerSettings.Android.keystorePass = keystoreInformation.Passphrase;
                 PlayerSettings.Android.keyaliasName = keystoreInformation.AliasName;
                 PlayerSettings.Android.keyaliasPass = keystoreInformation.AliasPassphrase;
             }
         }
-
     }
-
 }
