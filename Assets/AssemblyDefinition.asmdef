@@ -1,0 +1,10 @@
+{
+    "name": "umm@keystore_manager",
+    "references": [
+        "umm@setting_core"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
