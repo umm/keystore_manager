@@ -1,0 +1,13 @@
+{
+    "name": "umm@keystore_manager-Editor",
+    "references": [
+        "umm@keystore_manager",
+        "umm@setting_core"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
