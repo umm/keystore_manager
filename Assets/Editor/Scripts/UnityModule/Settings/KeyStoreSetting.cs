@@ -7,7 +7,7 @@ using UnityModule.KeystoreManager;
 
 namespace UnityModule.Settings
 {
-    public class KeyStoreSetting : Setting<KeyStoreSetting>
+    public class KeyStoreSetting : Setting<KeyStoreSetting>, IEnvironmentSetting
     {
         [Serializable]
         public struct KeystoreInformation
@@ -45,7 +45,7 @@ namespace UnityModule.Settings
         [UnityEditor.MenuItem("Assets/Create/Settings/KeyStore Setting")]
         public static void CreateSettingAsset()
         {
-            CreateAsset(true);
+            CreateAsset();
         }
 #endif
     }
