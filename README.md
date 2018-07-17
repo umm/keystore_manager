@@ -9,7 +9,7 @@
 # Install
 
 ```shell
-$ npm install github:umm-projects/keystore_manager
+$ npm install github:umm/keystore_manager
 ```
 
 # Usage
