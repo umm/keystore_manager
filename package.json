@@ -1,6 +1,6 @@
 {
   "name": "@umm/keystore_manager",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "Manage Keystore for Android",
   "homepage": "https://github.com/umm/keystore_manager",
   "bugs": {
