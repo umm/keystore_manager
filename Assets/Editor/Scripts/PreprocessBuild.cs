@@ -47,6 +47,9 @@ namespace UnityModule.KeystoreManager
                 return;
             }
 #endif
+#if UNITY_2019_1_OR_NEWER
+            PlayerSettings.Android.useCustomKeystore = true;
+#endif
             if (KeyStoreSetting.GetOrDefault().ShouldKeystoreUseEnvironmentVariable)
             {
                 PlayerSettings.Android.keystoreName = Environment.GetEnvironmentVariable(EnvironmentVariableNameKeystorePath);
